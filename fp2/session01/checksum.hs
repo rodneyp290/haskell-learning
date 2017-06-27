@@ -7,8 +7,9 @@ module Homework01 where
    where
      toDigits' :: Integer -> [Integer] -> [Integer]
      toDigits' num l
+       | num <  0  = []
        | num == 0  = l
-       | num >  0   = (toDigits' (num `div` 10) ((num `mod` 10):l))
+       | num >  0  = (toDigits' (num `div` 10) ((num `mod` 10):l))
 
  toDigitsRev  :: Integer -> [Integer]
  toDigitsRev  num = reverse (toDigits num)
@@ -24,10 +25,18 @@ module Homework01 where
  doubleEveryOther :: [Integer] -> [Integer]
  doubleEveryOther digits = reverse ( doubleEveryOther' (reverse digits))
  doubleEveryOther' :: [Integer] -> [Integer]
+ doubleEveryOther' [] = []
  doubleEveryOther' (first:(second:rest)) =
                      first:((2*second):(doubleEveryOther' rest))
  doubleEveryOther' list@(first:[]) = list
- doubleEveryOther' [] = []
+
+ gDoubleEveryOther :: [Integer] -> [Integer]
+ gDoubleEveryOther digits = reverse ( doubleEveryOther' (reverse digits))
+ gDoubleEveryOther' :: [Integer] -> [Integer]
+ gDoubleEveryOther' (first:(second:rest)) =
+                     first:((2*second):gDoubleEveryOther' rest))
+ gDoubleEveryOther' list = list
+ 
 
  sumDigits :: [Integer] -> Integer 
  sumDigits [] = 0
@@ -37,6 +46,11 @@ module Homework01 where
  validate num 
    | (num' `mod` 10) == 0 = True
    | otherwise         = False
+       where num' = sumDigits $ doubleEveryOther $ gToDigits num
+
+ gValidate :: Integer -> Bool
+ gValidate num 
+   (num' `mod` 10) == 0
        where num' = sumDigits $ doubleEveryOther $ gToDigits num
 
  main = 
