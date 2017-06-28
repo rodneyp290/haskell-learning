@@ -18,7 +18,10 @@ module TowersOfHanoiExtended where
  hanoi4 n src tgt tmp1 tmp2 = 
    (hanoi4 (n-1) src tmp1 tmp2 tgt) ++ ((src, tgt):(hanoi4 (n-1) tmp2 tmp1 tgt src))
 
+ moves  = (hanoi 4 "a" "b" "c") 
+ moves4 = (hanoi4 4 "a" "b" "c" "d") 
+
  main =
    do
-     print (hanoi 4 "a" "b" "c") 
-     print (hanoi4 4 "a" "b" "c" "d") 
+     print (length moves,moves)
+     print (length moves4,moves4)
