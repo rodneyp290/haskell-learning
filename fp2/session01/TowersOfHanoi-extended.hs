@@ -17,7 +17,6 @@ module TowersOfHanoiExtended where
  hanoi4 n src tgt tmp1 tmp2
    | n <  1 = []
    | n == 1 = [(src, tgt)]
-   | n == 2 = [(src, tmp1),(src, tgt),(tmp1,tgt)]
    | otherwise =
               (hanoi4 (n-2) src tmp2 tgt tmp1)
            ++ ( (src, tmp1) : (src, tgt) : (tmp1,tgt)
