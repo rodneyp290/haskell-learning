@@ -8,6 +8,11 @@ module TowersOfHanoiExtended where
  hanoi n src tgt tmp = 
    (hanoi (n-1) src tmp tgt) ++ ((src, tgt):(hanoi (n-1) tmp tgt src))
  
+ gHanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
+ gHanoi n src tgt tmp
+   | n <  1 = []
+   | otherwise = (hanoi (n-1) src tmp tgt) ++ ((src, tgt):(hanoi (n-1) tmp tgt src))
+ 
  hanoi4 :: Integer -> Peg -> Peg -> Peg -> Peg -> [Move]
  hanoi4 1 src tgt tmp1 tmp2 = [(src, tgt)]
  hanoi4 n src tgt tmp1 tmp2 = 
