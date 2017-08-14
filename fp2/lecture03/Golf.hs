@@ -2,10 +2,17 @@ module Golf where
 import Data.List
 import Data.Bool
 
+-- skips takes a list of elements and returns a list of lists 
+--  where the nth list only includes every n elements
 skips :: [a] -> [[a]]
+-- An empty list returns an empty list
 skips [] = []
+-- For a non-empty list call tails that drop first (n-1) elements
+--  which we then filter out the empty lists with (not.null) 
+--  before we map over the filter lists with the function f (defined below)
 skips xs = map f (filter (not.null) $ tails xs)
   where 
+  -- f is used to apply g (defined below) 
   f :: [a] -> [a]
   f ys = g ys ((length xs) - (length ys))
 
@@ -25,6 +32,7 @@ histogram xs = (unlines ( transpose ( hLines ( hInts xs))))
 
 hLines :: [Integer] -> [String]
 hLines xs = map (hLine (foldr (\x y -> max x y) 0 xs)) xs
+
 hLine :: Integer -> Integer -> String
 hLine h x = (rep (h-x) ' ') ++ (rep x '*')
 
