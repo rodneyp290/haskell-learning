@@ -28,7 +28,8 @@ localMaxima _ = []
 
 histogram :: [Integer] -> String
 histogram xs = (unlines ( transpose ( hLines ( hInts xs))))
-                ++ "===========\n0123456789\n"
+                ++ "==========\n0123456789\n"
+--                ++  unlines [rep 10 '=', ['0'..'9']]
 
 hLines :: [Integer] -> [String]
 hLines xs = map (hLine (foldr (\x y -> max x y) 0 xs)) xs
