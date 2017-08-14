@@ -38,14 +38,14 @@ fun2 n | even n    = n + fun2 (n `div` 2)
 fun2' :: Integer -> Integer
 fun2' n = bool (bool (fun2 (3 * n + 1))(n + fun2' (n `div` 2))(even n))(0)(n<=1)
 
--- Matt & Zoey inspired Solution
+-- Matt & Zoey's Solution (but with where clause)
 fun2'' :: Integer -> Integer
 fun2'' = foldr (+) 0 . filter even . takeWhile (>0) . iterate f2
   where f2 :: Integer -> Integer
         f2 1 = 0
         f2 n = bool
-              (fun2'' (3 * n + 1))
-              (n + fun2'' (n `div` 2))
+              (3 * n + 1)
+              (n `div` 2)
               (even n)
 -- TODO: Check above functions actually work
 
