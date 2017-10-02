@@ -11,7 +11,7 @@ data Row = Row Token Token Token deriving (Show)
 
 type MRow = Maybe Row
 
-emptyRow :: Row 
+emptyRow :: Row
 emptyRow = Row E E E
 
 threeInARow :: Row -> Maybe Token
@@ -19,12 +19,12 @@ threeInARow (Row a b c)
     | (a == b) && (b == c) && (a /= E) = Just a
     | otherwise = Nothing
 
-data Board = 
+data Board =
     TTT Row Row Row deriving (Show)
 
 type MBoard = Maybe Board
 
-emptyBoard :: Board 
+emptyBoard :: Board
 emptyBoard = TTT emptyRow emptyRow emptyRow
 
 transpose :: Board -> Board
@@ -72,7 +72,7 @@ data GameTree = Node Board [GameTree] | Leaf
         --getBoardLists Leaf = []
         --getBoardLists (Node _ gts) = gts:(map getBoardLists gts)
 
-        --getHeadBoard = 
+        --getHeadBoard =
 
 --instance Show (GameTree) where
     --show = (show).(take 20).(gameTreeToList)
@@ -102,7 +102,7 @@ getNextBoards :: Token -> Board -> [Board]
 getNextBoards t b = catMaybes (map (makeMove b) (bruteMoves t))
 
 
-gameTree :: GameTree 
+gameTree :: GameTree
 gameTree = buildTree getNextBoards X emptyBoard
     where
         buildTree :: (Token -> Board -> [Board]) -> Token -> Board -> GameTree
