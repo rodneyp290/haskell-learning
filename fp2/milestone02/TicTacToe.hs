@@ -9,8 +9,6 @@ data Token = E | X | O deriving (Show,Eq)
 
 data Row = Row Token Token Token deriving (Show)
 
-type MRow = Maybe Row
-
 emptyRow :: Row
 emptyRow = Row E E E
 
@@ -21,8 +19,6 @@ threeInARow (Row a b c)
 
 data Board =
     TTT Row Row Row deriving (Show)
-
-type MBoard = Maybe Board
 
 emptyBoard :: Board
 emptyBoard = TTT emptyRow emptyRow emptyRow
@@ -79,16 +75,16 @@ data GameTree = Node Board [GameTree] | Leaf
 
 data Move = Move Index Index Token deriving (Show)
 
-maybeBoard :: MRow -> MRow -> MRow -> MBoard
+maybeBoard :: Maybe Row -> Maybe Row -> Maybe Row -> Maybe Board
 maybeBoard (Just a) (Just b) (Just c) = Just (TTT a b c)
 maybeBoard _ _ _ = Nothing
 
-makeMove :: Board -> Move -> MBoard
+makeMove :: Board -> Move -> Maybe Board
 makeMove (TTT a b c) (Move h A t) = maybeBoard (placeInRow a h t) (Just b) (Just c)
 makeMove (TTT a b c) (Move h B t) = maybeBoard (Just a) (placeInRow b h t) (Just c)
 makeMove (TTT a b c) (Move h C t) = maybeBoard (Just a) (Just b) (placeInRow c h t)
 
-placeInRow :: Row -> Index -> Token -> MRow
+placeInRow :: Row -> Index -> Token -> Maybe Row
 placeInRow (Row E b c) A t = Just (Row t b c)
 placeInRow (Row a E c) B t = Just (Row a t c)
 placeInRow (Row a b E) C t = Just (Row a b t)
