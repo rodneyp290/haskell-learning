@@ -1,10 +1,11 @@
 module TicTacToe where
 
 import Data.Maybe
+import Data.Bool
 
 data Index = A | B | C deriving (Show)
 
-data Token = E | X | O deriving (Show)
+data Token = E | X | O deriving (Show,Eq)
 
 data Row = Row Token Token Token deriving (Show)
 
@@ -12,6 +13,11 @@ type MRow = Maybe Row
 
 emptyRow :: Row 
 emptyRow = Row E E E
+
+threeInARow :: Row -> Maybe Token
+threeInARow (Row a b c)
+    | (a == b) && (b == c) && (a /= E) = Just a
+    | otherwise = Nothing
 
 data Board = 
     TTT Row Row Row deriving (Show)
@@ -25,6 +31,37 @@ transpose :: Board -> Board
 transpose (TTT (Row a b c) (Row d e f) (Row g h i))
     =  (TTT (Row a d g) (Row b e h) (Row c f i))
 
+boardToRowList :: Board -> [Row]
+boardToRowList (TTT a b c) = a:b:c:[]
+
+diagonalRows :: Board -> [Row]
+diagonalRows (TTT (Row a _ c) (Row _ e _) (Row g _ i))
+    = (Row a e i):(Row g e c):[]
+
+possibleRows :: Board -> [Row]
+possibleRows b = (boardToRowList b) ++ (boardToRowList (transpose b)) ++ (diagonalRows b)
+
+boardFull :: Board -> Bool
+boardFull (TTT (Row a b c) (Row d e f) (Row g h i))
+    |   (a /= E) && (b /= E) && (c /= E)
+     && (d /= E) && (e /= E) && (f /= E)
+     && (g /= E) && (h /= E) && (i /= E)
+                = True
+    | otherwise = False
+
+data BoardStatus = Won Token | Draw | InPlay | Invalid
+
+status :: Board -> BoardStatus
+status b = winPlayersToStatus winPlayers
+  where
+    winPlayers :: [Token]
+    winPlayers = catMaybes (map threeInARow (possibleRows b))
+
+    winPlayersToStatus :: [Token] -> BoardStatus
+    winPlayersToStatus [] = bool (InPlay) (Draw) (boardFull b)
+    winPlayersToStatus [a] = Won a
+    winPlayersToStatus _ = Invalid
+
 data GameTree = Node Board [GameTree] | Leaf
 
 --gameTreeToList :: GameTree -> [[Board]]
@@ -37,8 +74,8 @@ data GameTree = Node Board [GameTree] | Leaf
 
         --getHeadBoard = 
 
-instance Show (GameTree) where
-    show = (show).(take 20).(gameTreeToList)
+--instance Show (GameTree) where
+    --show = (show).(take 20).(gameTreeToList)
 
 data Move = Move Index Index Token deriving (Show)
 
