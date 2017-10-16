@@ -23,9 +23,9 @@ tag Empty          = mempty
 tag (Single m _)   = m
 tag (Append m _ _) = m
 
---instance (Monoid m) => Monoid (JoinList m a) where
---  mempty = Empty
---  mappend = (+++)
+instance (Monoid m) => Monoid (JoinList m a) where
+  mempty = Empty
+  mappend = (+++)
 
 instance (Sized m) => Sized (JoinList m a) where
   size Empty = 0
