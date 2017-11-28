@@ -86,7 +86,7 @@ t2 = ((lb "f" (lb "a" ((lt "f") .$ (lt "a")))).$ (lb "x" (ap (lt "x") (lt "x")))
 t3 :: LExpr
 t3 = (
        (
-         (lb "b" (lb "t" (lb "e" ((lt "b") .$ (lt "t")) .$ lt "e")))
+         (lb "b" (lb "t" (lb "e" (((lt "b") .$ (lt "t")) .$ lt "e"))))
          .$(lb "x" (lb "y" (lt "x" )))
        )
        .$(lt "x")
