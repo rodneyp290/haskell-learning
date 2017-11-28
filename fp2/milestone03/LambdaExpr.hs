@@ -4,14 +4,27 @@ module LambdaExpr where
 import qualified Data.Set as S
 import Data.Monoid -- for (<>) operator
 
-data Abstraction = Lambda String LExpr deriving (Show, Eq)
-data Application = App LExpr LExpr deriving (Show, Eq)
-data Literal     = Lit String deriving (Show, Eq)
+data Abstraction = Lambda String LExpr deriving Eq
+data Application = App LExpr LExpr deriving Eq
+data Literal     = Lit String deriving Eq
+
+instance Show Abstraction where
+  show (Lambda s e) = "λ" ++ s ++ ".(" ++ (show e) ++ ")"
+
+instance Show Application where
+  show (App e1 e2) =  show e1 ++ " " ++ (show e2)
+
+instance Show Literal where
+  show (Lit s ) = s
 
 data LExpr = LAB Abstraction
            | LAP Application
-           | LL Literal deriving (Show, Eq)
+           | LL Literal deriving Eq
 
+instance Show LExpr where
+  show (LL  e) = show e
+  show (LAB e) = show e
+  show (LAP e) = show e
 
 eval :: LExpr -> LExpr
 eval (LL  (Lit a))      = LL (Lit a)
