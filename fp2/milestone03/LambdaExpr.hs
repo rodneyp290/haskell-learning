@@ -9,10 +9,10 @@ data Application = App LExpr LExpr deriving Eq
 data Literal     = Lit String deriving Eq
 
 instance Show Abstraction where
-  show (Lambda s e) = "λ" ++ s ++ ".(" ++ (show e) ++ ")"
+  show (Lambda s e) = "λ" ++ s ++ "." ++ (show e) 
 
 instance Show Application where
-  show (App e1 e2) =  show e1 ++ " " ++ (show e2)
+  show (App e1 e2) =  "(" ++ show e1 ++ " " ++ (show e2) ++ ")"
 
 instance Show Literal where
   show (Lit s ) = s
