@@ -19,7 +19,13 @@ instance Buffer (JoinList (Score, Size) String) where
 
   -- fromString :: String -> b
   -- TODO: Make this return a BALANCED tr.. *cough* JoinList
-  fromString =  (mconcat).((map (\s -> (Single (scoreString s, Size 1) s))).lines)
+  --fromString =  (mconcat).((map (\s -> (Single (scoreString s, Size 1) s))).lines)
+  fromString =  (createBalJL.lines)
+    where 
+      createBalJL :: [String] -> JoinList (Score, Size) String
+      createBalJL []   = Empty
+      createBalJL (s:[]) = Single (scoreString s, Size 1) s
+      createBalJL ls   = (createBalJL (take ((length ls) `div` 2) ls)) +++ (createBalJL (drop ((length ls) `div` 2) ls))
 
   -- line :: Int -> b -> Maybe String
   line = indexJ
@@ -40,3 +46,18 @@ main = do
       empty :: JoinList (Score, Size) String
       empty = Empty
 
+
+toDigits :: Int-> [Int]
+toDigits num = toDigits' num []
+  where
+    toDigits' :: Int-> [Int] -> [Int]
+    toDigits' num l
+      | num <  0  = []
+      | num == 0  = l 
+      | num >  0  = (toDigits' (num `div` 10) ((num `mod` 10):l))
+
+intToString :: Int -> String
+intToString = (map (char.(48 + ))).toDigits
+
+char :: Int -> Char
+char c = toEnum c

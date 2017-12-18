@@ -47,8 +47,8 @@ class Substituable a where
 instance Substituable Abstraction where
   substitute (Lambda s' e1') s e2 
     | s == s'   = LAB (Lambda s' e1') -- substitute e1'' s e2
-    | (S.member s' (freeVars e2)) =  substitute e1'' s e2
-    | otherwise = LAB (Lambda s' (substitute e1' s e2))
+    | not (S.member s' (freeVars e2)) = LAB (Lambda s' (substitute e1' s e2))
+    | otherwise = substitute (e1'') s e2
       where e1'' = Lambda (s'++s') (substitute e1' s' (LL (Lit (s'++s'))) )
 
 instance Substituable Application where
