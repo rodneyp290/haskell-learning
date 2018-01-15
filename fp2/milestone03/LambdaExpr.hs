@@ -40,6 +40,10 @@ freeVars (LL  (Lit a))      = S.fromList [a]
 freeVars (LAP (App e1 e2))  = (freeVars e1) <> (freeVars e2)
 freeVars (LAB (Lambda s e)) = S.difference (freeVars e) (S.fromList [s])
 
+boundVars :: LExpr -> S.Set String
+boundVars (LL  (Lit _))      = S.empty
+boundVars (LAP (App e1 e2))  = (boundVars e1) <> (boundVars e2)
+boundVars (LAB (Lambda s e)) = (boundVars e) <> (S.fromList [s])
 
 class Substituable a where 
   substitute :: a -> String -> LExpr -> LExpr
