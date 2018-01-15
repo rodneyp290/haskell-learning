@@ -68,6 +68,18 @@ instance Substituable LExpr where
   substitute (LAB e1) s e2 = substitute e1 s e2
   substitute (LAP e1) s e2 = substitute e1 s e2
 
+
+--parseExpr :: String -> Either (a,String) (LExpr)
+--parseExpr 'λ':expr
+--  | Abs Error Cases =
+--  | otherwise       = LAB ( Lambda (parameter expr) (parseExpr (body expr)))
+--parseExpr '(':expr
+--  | App Error Cases =
+--  | otherwise       = LAP ( App (parse (getAbstraction expr)) (parse (getArgument expr)) )
+--parseExpr expr
+--  | Lit Error Cases =
+--  | otherwise          = LL (Lit expr)
+
 -- Test Helper functions
 lb :: String -> LExpr -> LExpr
 lb  s e = LAB (Lambda s e)
