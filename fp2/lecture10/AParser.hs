@@ -57,3 +57,55 @@ posInt = Parser f
 ------------------------------------------------------------
 -- Your code goes below here
 ------------------------------------------------------------
+
+first :: (a -> b) -> (a,c) -> (b,c)
+first f (a,c) = (f a, c)
+
+instance Functor Parser where
+  -- fmap :: (a->b) -> Parser a -> Parser b
+  -- fmap :: (Name->String->Employee) -> Parser Name -> Parser (String->Employee)
+  fmap fab (Parser rpa) = Parser ((fmap (first fab)).rpa)
+
+second :: (a -> b) -> (c,a) -> (c,b)
+second = fmap -- for sanity
+
+instance Applicative Parser where
+  -- pure :: a -> Parser a
+  pure a = Parser f
+    where f str = Just (a, str)
+  -- <*> :: Parser (a->b) -> (Parser a) -> (Parser b)
+  -- <*> :: Parser (String->Employee) -> (Parser String) -> (Parser Employee)
+  (Parser rpab) <*> (Parser rpa) = Parser ((go rpa).(rpab))
+    where
+      go :: (String -> Maybe (a, String)) -> Maybe (a->b, String) -> Maybe (b,String)
+      go _ Nothing = Nothing
+      go fsa (Just (fab, str)) = fmap (first fab) (fsa str)
+
+------------------------------------------------------------
+-- Employee Example
+------------------------------------------------------------
+
+type Name = String
+data Employee = Emp { name :: Name, phone :: String } deriving Show
+
+parseName :: Parser Name
+parseName = Parser f
+  where
+    f [] = Nothing
+    f xs = Just (span (not.isDigit) xs)
+
+parsePhone :: Parser String
+parsePhone = Parser f
+  where
+    f [] = Nothing
+    f xs = Just (span isDigit xs)
+
+partOne :: Parser (String->Employee)
+partOne = Emp <$> parseName
+-- Parser ((fmap (first Emp)).parseName
+-- Just (Emp "Harry ", "5555905") <- Just ("Harry ","5555905") <- "Harry 5555905"
+-- Just (Emp "Harry", "") <- Just ("Harry","") <- "Harry"
+-- Nothing <- Nothing <- "5555905"
+
+parseEmployee = partOne <*> parsePhone
+-- Parser (String->Emp) <*> Parser String
