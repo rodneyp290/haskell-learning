@@ -58,6 +58,7 @@ posInt = Parser f
 -- Your code goes below here
 ------------------------------------------------------------
 
+-- Exercise 1
 first :: (a -> b) -> (a,c) -> (b,c)
 first f (a,c) = (f a, c)
 
@@ -65,6 +66,8 @@ instance Functor Parser where
   -- fmap :: (a->b) -> Parser a -> Parser b
   -- fmap :: (Name->String->Employee) -> Parser Name -> Parser (String->Employee)
   fmap fab (Parser rpa) = Parser ((fmap (first fab)).rpa)
+
+-- Exercise 2
 
 second :: (a -> b) -> (c,a) -> (c,b)
 second = fmap -- for sanity
@@ -80,6 +83,12 @@ instance Applicative Parser where
       go :: (String -> Maybe (a, String)) -> Maybe (a->b, String) -> Maybe (b,String)
       go _ Nothing = Nothing
       go fsa (Just (fab, str)) = fmap (first fab) (fsa str)
+
+-- Exercise 3
+
+
+-- Exercise 4
+
 
 ------------------------------------------------------------
 -- Employee Example
