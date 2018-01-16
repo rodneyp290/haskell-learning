@@ -86,6 +86,24 @@ instance Applicative Parser where
 
 -- Exercise 3
 
+pairParser :: Parser (a->b->(a,b))
+pairParser = pure (,)
+
+abParser :: Parser (Char,Char)
+abParser = (,) <$> char 'a' <*> char 'b'
+
+abParser_ :: Parser ()
+abParser_ = forget <$> abParser
+  where
+    forget :: (a,b) -> ()
+    forget _ = ()
+
+intPair :: Parser [Integer]
+intPair = join <$> posInt <*> char ' ' <*>  posInt
+  where
+    join :: Integer -> Char -> Integer -> [Integer]
+    join i1 _ i2 = [i1,i2]
+
 
 -- Exercise 4
 
