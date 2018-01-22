@@ -104,9 +104,15 @@ intPair = join <$> posInt <*> char ' ' <*>  posInt
     join :: Integer -> Char -> Integer -> [Integer]
     join i1 _ i2 = [i1,i2]
 
-
 -- Exercise 4
 
+instance Alternative Parser where 
+  empty = Parser (const Nothing)
+  -- <|> :: Parser a -> Parser a -> Parser a
+  (<|>) a b = Parser $ \x -> go a b x
+    where
+      go :: Parser a -> Parser a -> (String -> Maybe (a, String))
+      go a b c = ((runParser a) c) <|> ((runParser b) c)
 
 ------------------------------------------------------------
 -- Employee Example
