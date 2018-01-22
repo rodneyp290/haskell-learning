@@ -143,3 +143,7 @@ instance Alternative Parser where
       go :: Parser a -> Parser a -> (String -> Maybe (a, String))
       go a b c = ((runParser a) c) <|> ((runParser b) c)
 
+-- Exercise 5
+
+intOrUppercase :: Parser ()
+intOrUppercase = ((const ()) <$> posInt) <|> (const () <$> satisfy isUpper)
