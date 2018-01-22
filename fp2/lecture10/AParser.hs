@@ -84,6 +84,35 @@ instance Applicative Parser where
       go _ Nothing = Nothing
       go fsa (Just (fab, str)) = fmap (first fab) (fsa str)
 
+------------------------------------------------------------
+-- Employee Example
+------------------------------------------------------------
+
+type Name = String
+data Employee = Emp { name :: Name, phone :: String } deriving Show
+
+parseName :: Parser Name
+parseName = Parser f
+  where
+    f [] = Nothing
+    f xs = Just (span (not.isDigit) xs)
+
+parsePhone :: Parser String
+parsePhone = Parser f
+  where
+    f [] = Nothing
+    f xs = Just (span isDigit xs)
+
+partOne :: Parser (String->Employee)
+partOne = Emp <$> parseName
+-- Parser ((fmap (first Emp)).parseName
+-- Just (Emp "Harry ", "5555905") <- Just ("Harry ","5555905") <- "Harry 5555905"
+-- Just (Emp "Harry", "") <- Just ("Harry","") <- "Harry"
+-- Nothing <- Nothing <- "5555905"
+
+parseEmployee = partOne <*> parsePhone
+-- Parser (String->Emp) <*> Parser String
+
 -- Exercise 3
 
 pairParser :: Parser (a->b->(a,b))
@@ -114,31 +143,3 @@ instance Alternative Parser where
       go :: Parser a -> Parser a -> (String -> Maybe (a, String))
       go a b c = ((runParser a) c) <|> ((runParser b) c)
 
-------------------------------------------------------------
--- Employee Example
-------------------------------------------------------------
-
-type Name = String
-data Employee = Emp { name :: Name, phone :: String } deriving Show
-
-parseName :: Parser Name
-parseName = Parser f
-  where
-    f [] = Nothing
-    f xs = Just (span (not.isDigit) xs)
-
-parsePhone :: Parser String
-parsePhone = Parser f
-  where
-    f [] = Nothing
-    f xs = Just (span isDigit xs)
-
-partOne :: Parser (String->Employee)
-partOne = Emp <$> parseName
--- Parser ((fmap (first Emp)).parseName
--- Just (Emp "Harry ", "5555905") <- Just ("Harry ","5555905") <- "Harry 5555905"
--- Just (Emp "Harry", "") <- Just ("Harry","") <- "Harry"
--- Nothing <- Nothing <- "5555905"
-
-parseEmployee = partOne <*> parsePhone
--- Parser (String->Emp) <*> Parser String
