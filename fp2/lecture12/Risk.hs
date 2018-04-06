@@ -67,3 +67,23 @@ outcome b as ds = outcome' b (sortOn negate as) (sortOn negate ds)
 
 invade :: Battlefield -> Rand StdGen Battlefield
 invade b = (bool ((battle b >>= invade) ) (pure b) ((attackers b < 2) || (defenders b < 1)))
+
+------------------------------------------------------------
+-- Exercise 4 - successProb :: Battlefield -> Rand StdGen Double
+-- "runs invade 1000 times, and uses the results to compute a
+--  Double between 0 and 1 representing the estimated probability
+--  that the attacking army will completely destroy the defending army."
+
+successProb :: Battlefield -> Rand StdGen Double
+successProb b =
+  replicateM 1000 (invade b)
+  >>= pure.(map success)
+  >>= pure.sum
+  >>= pure.(/1000)
+
+-- Original Applicative form
+--successProb b = (/1000) <$> sum <$> (map success) <$> replicateM 1000 (invade b)
+
+-- helper function to judge if attackers have successfully won a Battlefield
+success :: Battlefield -> Double
+success b = bool (0)(1)(defenders b == 0)
