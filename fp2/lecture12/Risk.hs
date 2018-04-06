@@ -61,3 +61,9 @@ outcome b as ds = outcome' b (sortOn negate as) (sortOn negate ds)
       where
         aloss = bool (1)(0) ((unDV ad) > (unDV dd))
         dloss = 1 - aloss --bool (0)(1) ((unDV ad) > (unDV dd))
+
+------------------------------------------------------------
+-- Exercise 3 - invade :: Battlefield -> Rand StdGen Battlefield
+
+invade :: Battlefield -> Rand StdGen Battlefield
+invade b = (bool ((battle b >>= invade) ) (pure b) ((attackers b < 2) || (defenders b < 1)))
